@@ -34,7 +34,7 @@ def save_data():
         for _ in notes:
             savedata += str(_)
             savedata += "#\n"
-        file.write(savedata[:-2])
+        file.write(savedata[:-2] + "\n")
     
 def load_data():
     global notes
@@ -116,8 +116,10 @@ while not user_input == b'\x1b':
     ## Output ##
     os.system("cls")
     # Menu
-    print(" a) Add d) Delete  f) Fill F) Fill all  N) Notes | Navigate with arrow keys, Increase/decrease with +/-, Esc to quit")
-    print(" -------------------------------------------------------------------------------------------------------------------\n")
+    print(" a) Add d) Delete  f) Fill F) Fill all  N) Notes \
+| Navigate with arrow keys, Increase/decrease with +/-, Esc to quit")
+    print(" ----------------------------------------------\
+---------------------------------------------------------------------\n")
     for _ in range(len(counters)):
         # Active line
         if cursor == _:
@@ -158,9 +160,9 @@ while not user_input == b'\x1b':
             counters.pop(cursor)
         if cursor == len(counters) != 0:
             cursor -= 1
-    # Esc
-    elif user_input == b'\x1b':
-        save_data()
     # Notes
     elif user_input == b'n' or user_input == b'N':
         note_interface()
+    # Esc
+    elif user_input == b'\x1b':
+        save_data()
