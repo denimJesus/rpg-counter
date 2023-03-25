@@ -34,7 +34,7 @@ def save_data():
         for _ in notes:
             savedata += str(_)
             savedata += "#\n"
-        file.write(savedata[:-2] + "\n")
+        file.write(savedata[:-2])
     
 def load_data():
     global notes
