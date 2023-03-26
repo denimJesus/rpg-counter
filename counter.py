@@ -46,6 +46,7 @@ def load_data():
     obj = {}
     n = 0
     if not os.path.isfile("save.txt"):
+        notes = []
         return
     with open("save.txt", "r") as file:
         # Load counters
@@ -92,7 +93,8 @@ def note_interface():
             cursor = len(notes)
             write_note(cursor)
         elif user_input == b'a':
-            write_note(cursor, False)
+            if notes:
+                write_note(cursor, False)
         elif user_input == b'd':
             if notes:
                 notes.pop(cursor)
