@@ -29,11 +29,11 @@ def save_data():
         for _ in counters:
             savedata += json.dumps(_.__dict__) + "\n"
         file.write(savedata)
-        file.write("#\n") # Separator for counters & notes
+        file.write("#\n") # Separator line for counters & notes
         savedata = ""
+        # Save notes with separators to load into an array
         for _ in notes:
-            savedata += str(_)
-            savedata += "#\n"
+            savedata += str(_) + "#\n"
         file.write(savedata[:-2])
     
 def load_data():
@@ -62,12 +62,13 @@ def load_data():
         
 def note_interface():
     """ Note interface and controls """
+    global notes
     cursor = 0
     user_input = ''
     while not user_input == b'q':
         os.system("cls")
-        print(" n) New d) Delete a) Append q) Back")
-        print(" -----------------------------------\n")
+        print(" n) New  d) Delete  a) Append  q) Back |")
+        print("¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨`\n")
         for _ in range(len(notes)):
             if cursor == _:
                 print(">", end=" ")
@@ -81,24 +82,22 @@ def note_interface():
         elif user_input == b'P':
             if cursor < len(notes) - 1:
                 cursor += 1
-        # Edit
+        # New, Append, Delete
         elif user_input == b'n':
             write_note(len(notes))
         elif user_input == b'a':
             write_note(cursor, False)
-        # Delete
         elif user_input == b'd':
             if notes:
                 notes.pop(cursor)
             if cursor > 0:
                 cursor -= 1
 
-def write_note(n, clear = True):
+def write_note(n, new_note = True):
     """ Add / Append to notes[n] """
     entry = ""
-    if clear:
+    if new_note:
         notes.append("")
-        notes[n] = ""
     while True:
         os.system("cls")
         print(" Write note:\n")
@@ -116,10 +115,9 @@ while not user_input == b'\x1b':
     ## Output ##
     os.system("cls")
     # Menu
-    print(" a) Add d) Delete  f) Fill F) Fill all  N) Notes \
-| Navigate with arrow keys, Increase/decrease with +/-, Esc to quit")
-    print(" ----------------------------------------------\
----------------------------------------------------------------------\n")
+    print(" a) Add  d) Delete  f) Fill  F) Fill all  n) Notes |" +
+          " Navigate with arrow keys, Increase/decrease with +/-, Esc to quit")
+    print("¨"*120)
     for _ in range(len(counters)):
         # Active line
         if cursor == _:
