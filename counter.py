@@ -22,10 +22,13 @@ class Counter:
     def sub(self):
         if self.count > 0:
             self.count -= 1
+            
+    def fill(self):
+        self.count = self.max
 
 def save_data():
     savedata = ""
-    with open("saved.txt", "w") as file:
+    with open("save.txt", "w") as file:
         for _ in counters:
             savedata += json.dumps(_.__dict__) + "\n"
         file.write(savedata)
@@ -42,9 +45,9 @@ def load_data():
     line = ""
     obj = {}
     n = 0
-    if not os.path.isfile("saved.txt"):
+    if not os.path.isfile("save.txt"):
         return
-    with open("saved.txt", "r") as file:
+    with open("save.txt", "r") as file:
         # Load counters
         line = file.readline()
         while not line == "#\n":
@@ -59,6 +62,8 @@ def load_data():
                 n += 1
                 line = file.readline()
             notes[n] += line
+        if len(notes) == 1 and notes[0] == "":
+            notes = []
         
 def note_interface():
     """ Note interface and controls """
@@ -68,7 +73,7 @@ def note_interface():
     while not user_input == b'q':
         os.system("cls")
         print(" n) New  d) Delete  a) Append  q) Back |")
-        print("¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨`\n")
+        print("¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨`")
         for _ in range(len(notes)):
             if cursor == _:
                 print(">", end=" ")
@@ -84,7 +89,8 @@ def note_interface():
                 cursor += 1
         # New, Append, Delete
         elif user_input == b'n':
-            write_note(len(notes))
+            cursor = len(notes)
+            write_note(cursor)
         elif user_input == b'a':
             write_note(cursor, False)
         elif user_input == b'd':
@@ -117,7 +123,7 @@ while not user_input == b'\x1b':
     # Menu
     print(" a) Add  d) Delete  f) Fill  F) Fill all  n) Notes |" +
           " Navigate with arrow keys, Increase/decrease with +/-, Esc to quit")
-    print("¨"*120)
+    print("¨" * 120)
     for _ in range(len(counters)):
         # Active line
         if cursor == _:
@@ -144,10 +150,10 @@ while not user_input == b'\x1b':
     # Fill & Fill All
     elif user_input == b'f':
         if not counters == []:
-            counters[cursor].count = counters[cursor].max
+            counters[cursor].fill()
     elif user_input == b'F':
         for _ in counters:
-            _.count = _.max
+            _.fill()
     # Add
     elif user_input == b'a':
         print()
@@ -163,4 +169,5 @@ while not user_input == b'\x1b':
         note_interface()
     # Esc
     elif user_input == b'\x1b':
+        os.system("cls")
         save_data()
