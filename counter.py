@@ -38,8 +38,6 @@ def load_data():
         return
     with open("save.pickle", "rb") as file:
         counters, notes = pickle.load(file)
-        # if len(notes) == 1 and notes[0] == "":
-            # notes = []
         
 def note_interface():
     """ Note interface and controls """
