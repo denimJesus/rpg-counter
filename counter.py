@@ -33,7 +33,6 @@ def save_data():
 def load_data():
     global counters
     global notes
-    savedata = ""
     if not os.path.isfile("save.pickle"):
         notes = []
         return
