@@ -1,9 +1,9 @@
-import json
+import pickle
 import os
 import msvcrt as m
 
 global notes
-notes = [""]
+notes = []
 counters = []
 cursor = 0
 user_input = ''
@@ -27,44 +27,20 @@ class Counter:
         self.count = self.max
 
 def save_data():
-    savedata = ""
-    with open("save.txt", "w") as file:
-        for _ in counters:
-            savedata += json.dumps(_.__dict__) + "\n"
-        file.write(savedata)
-        file.write("#\n") # Separator line for counters & notes
-        savedata = ""
-        # Save notes with separators to load into an array
-        for _ in notes:
-            savedata += str(_) + "#\n"
-        file.write(savedata[:-2])
-    
+    with open("save.pickle", "wb") as file:
+        pickle.dump((counters, notes), file)
+            
 def load_data():
+    global counters
     global notes
     savedata = ""
-    line = ""
-    obj = {}
-    n = 0
-    if not os.path.isfile("save.txt"):
+    if not os.path.isfile("save.pickle"):
         notes = []
         return
-    with open("save.txt", "r") as file:
-        # Load counters
-        line = file.readline()
-        while not line == "#\n":
-            obj = json.loads(line)
-            Counter(obj["name"], obj["count"], obj["max"])
-            line = file.readline()
-        # Load notes
-        while line:
-            line = file.readline()
-            if line == "#\n":
-                notes.append("")
-                n += 1
-                line = file.readline()
-            notes[n] += line
-        if len(notes) == 1 and notes[0] == "":
-            notes = []
+    with open("save.pickle", "rb") as file:
+        counters, notes = pickle.load(file)
+        # if len(notes) == 1 and notes[0] == "":
+            # notes = []
         
 def note_interface():
     """ Note interface and controls """
